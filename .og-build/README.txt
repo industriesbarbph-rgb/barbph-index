@@ -1,0 +1,1 @@
+Approved BarbPH Index social preview staging. Temporary file; removed automatically after the asset is reconstructed.
