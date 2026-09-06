@@ -1,0 +1,38 @@
+name: Sync BarbPH Index from SEO Health Console
+
+on:
+  schedule:
+    - cron: "*/5 * * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: barbph-index-sync
+  cancel-in-progress: true
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out BarbPH Index
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Sync static directory from SEO Health Console
+        run: node scripts/sync-from-console.mjs
+
+      - name: Commit Index changes when registry changed
+        shell: bash
+        run: |
+          if git diff --quiet -- index.html; then
+            echo "No BarbPH Index changes detected."
+            exit 0
+          fi
+          git config user.name "barbph-index-sync"
+          git config user.email "barbph-index-sync@users.noreply.github.com"
+          git add index.html
+          git commit -m "Sync BarbPH Index from SEO Health Console"
+          git push
