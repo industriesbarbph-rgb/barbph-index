@@ -70,7 +70,7 @@ jobs:
           elif (( index_changed == 1 )); then
             message="Sync BarbPH Index from SEO Health Console"
           else
-            message="Refresh BarbPH Index automation keepalive"
+            message="Refresh BarbPH Index automation keepalive [skip netlify]"
           fi
 
           git commit -m "$message"
