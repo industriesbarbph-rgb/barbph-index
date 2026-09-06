@@ -28,8 +28,8 @@ jobs:
         run: |
           set -euo pipefail
           cat .og-build/part*.b64 | tr -d '\r\n' | base64 --decode > barbph-index-social-preview.jpg
-          echo "ed36f65326690af8a966ac65c2bebc4504d171f66efa290f6654400857abd188  barbph-index-social-preview.jpg" | sha256sum -c -
-          test "$(stat -c%s barbph-index-social-preview.jpg)" = "152585"
+          echo "4757bc1f3b7b2dde7c304917674e84842d9526e9dad3dbf56e7eb4a0a607c155  barbph-index-social-preview.jpg" | sha256sum -c -
+          test "$(stat -c%s barbph-index-social-preview.jpg)" = "63465"
 
       - name: Point SEO metadata to approved asset
         shell: bash
