@@ -24,15 +24,54 @@ jobs:
       - name: Sync static directory from SEO Health Console
         run: node scripts/sync-from-console.mjs
 
-      - name: Commit Index changes when registry changed
+      - name: Commit Index changes or refresh quiet-period keepalive
         shell: bash
         run: |
-          if git diff --quiet -- index.html; then
-            echo "No BarbPH Index changes detected."
+          set -euo pipefail
+          KEEPALIVE_FILE=".barbph-index-sync-keepalive"
+          KEEPALIVE_MAX_AGE_SECONDS=2419200
+          index_changed=0
+          keepalive_due=0
+
+          if ! git diff --quiet -- index.html; then
+            index_changed=1
+          fi
+
+          now_epoch="$(date -u +%s)"
+          if [[ ! -f "$KEEPALIVE_FILE" ]]; then
+            keepalive_due=1
+          else
+            keepalive_text="$(tr -d '\r\n' < "$KEEPALIVE_FILE")"
+            if keepalive_epoch="$(date -u -d "$keepalive_text" +%s 2>/dev/null)"; then
+              age="$((now_epoch - keepalive_epoch))"
+              if (( age >= KEEPALIVE_MAX_AGE_SECONDS )); then
+                keepalive_due=1
+              fi
+            else
+              keepalive_due=1
+            fi
+          fi
+
+          if (( keepalive_due == 1 )); then
+            date -u +%Y-%m-%dT%H:%M:%SZ > "$KEEPALIVE_FILE"
+          fi
+
+          if (( index_changed == 0 && keepalive_due == 0 )); then
+            echo "No BarbPH Index changes detected; keepalive is still fresh."
             exit 0
           fi
+
           git config user.name "barbph-index-sync"
           git config user.email "barbph-index-sync@users.noreply.github.com"
-          git add index.html
-          git commit -m "Sync BarbPH Index from SEO Health Console"
+          git add index.html "$KEEPALIVE_FILE"
+
+          if (( index_changed == 1 && keepalive_due == 1 )); then
+            message="Sync BarbPH Index and refresh automation keepalive"
+          elif (( index_changed == 1 )); then
+            message="Sync BarbPH Index from SEO Health Console"
+          else
+            message="Refresh BarbPH Index automation keepalive"
+          fi
+
+          git commit -m "$message"
           git push
