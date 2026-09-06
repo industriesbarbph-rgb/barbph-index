@@ -1,0 +1,51 @@
+name: Build approved BarbPH Index social preview
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - ".og-build/READY"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: barbph-index-approved-og
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Reconstruct approved social preview
+        shell: bash
+        run: |
+          set -euo pipefail
+          cat .og-build/part*.b64 | tr -d '\r\n' | base64 --decode > barbph-index-social-preview.jpg
+          echo "7903faae3d84ed01040c8e7157637d44bbb1ab4f37e0d71081fc3535d57b4a87  barbph-index-social-preview.jpg" | sha256sum -c -
+          test "$(stat -c%s barbph-index-social-preview.jpg)" = "395013"
+
+      - name: Point SEO metadata to approved asset
+        shell: bash
+        run: |
+          set -euo pipefail
+          sed -i 's/barbph-index-social-preview\.png/barbph-index-social-preview.jpg/g' index.html
+          sed -i 's/content="image\/png"/content="image\/jpeg"/g' index.html
+
+      - name: Commit approved asset and clean staging files
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "industriesbarbph-rgb"
+          git config user.email "industries.barbph@gmail.com"
+          git add index.html barbph-index-social-preview.jpg
+          git rm -r .og-build
+          git rm .github/workflows/build-approved-og.yml
+          git commit -m "Add approved BarbPH Index social preview asset"
+          git push
