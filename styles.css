@@ -1,0 +1,311 @@
+/* BarbPH Index — Version 1
+   One centered index-card surface. No external dependencies. */
+
+:root {
+  --page: #e8e6df;
+  --paper: #fffdf7;
+  --ink: #282826;
+  --muted: #6c6960;
+  --rule: rgba(91, 124, 164, 0.16);
+  --margin-rule: rgba(183, 82, 82, 0.42);
+  --border: rgba(72, 67, 58, 0.18);
+  --link: #223f64;
+  --focus: #1d4f7a;
+  --card-width: 860px;
+  --line-height: 32px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  min-width: 0;
+  background: var(--page);
+}
+
+body {
+  margin: 0;
+  min-width: 0;
+  padding: 40px 18px;
+  color: var(--ink);
+  background:
+    radial-gradient(circle at 12% 18%, rgba(255, 255, 255, 0.34) 0 1px, transparent 1.5px),
+    radial-gradient(circle at 78% 64%, rgba(60, 55, 45, 0.05) 0 1px, transparent 1.5px),
+    var(--page);
+  background-size: 19px 19px, 23px 23px, auto;
+  font-family: Georgia, "Times New Roman", serif;
+  line-height: 1.55;
+}
+
+.index-card {
+  position: relative;
+  width: min(100%, var(--card-width));
+  margin: 0 auto;
+  padding: 54px 64px 38px 86px;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  border-radius: 3px;
+  background-color: var(--paper);
+  background-image:
+    repeating-linear-gradient(
+      to bottom,
+      transparent 0,
+      transparent calc(var(--line-height) - 1px),
+      var(--rule) calc(var(--line-height) - 1px),
+      var(--rule) var(--line-height)
+    ),
+    radial-gradient(circle at 28% 21%, rgba(77, 68, 51, 0.035) 0 0.7px, transparent 0.9px),
+    radial-gradient(circle at 71% 73%, rgba(77, 68, 51, 0.025) 0 0.7px, transparent 0.9px);
+  background-size: auto, 13px 13px, 17px 17px;
+  box-shadow: 0 8px 24px rgba(52, 48, 40, 0.08);
+}
+
+.index-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 58px;
+  width: 1px;
+  background: var(--margin-rule);
+  pointer-events: none;
+}
+
+.index-card::after {
+  content: "";
+  position: absolute;
+  top: 34px;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: var(--margin-rule);
+  pointer-events: none;
+}
+
+.card-header,
+.directory,
+.seo-health,
+.card-footer {
+  position: relative;
+  z-index: 1;
+}
+
+.eyebrow,
+.entry-type,
+.entry-url,
+.card-footer,
+.layer-note {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+}
+
+.eyebrow {
+  margin: 0 0 8px;
+  color: var(--muted);
+  font-size: 0.74rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+h1,
+h2,
+h3,
+p {
+  margin-top: 0;
+}
+
+h1 {
+  margin-bottom: 10px;
+  font-size: clamp(2rem, 5vw, 3.35rem);
+  line-height: 1.05;
+  letter-spacing: -0.035em;
+  font-weight: 600;
+}
+
+.intro {
+  max-width: 680px;
+  margin-bottom: 8px;
+  font-size: 1.04rem;
+}
+
+.intro-note {
+  margin-bottom: 0;
+  color: var(--muted);
+  font-size: 0.94rem;
+}
+
+.directory {
+  margin-top: 42px;
+}
+
+.directory > h2,
+.seo-health h2 {
+  margin-bottom: 10px;
+  padding-bottom: 5px;
+  border-bottom: 1px solid rgba(44, 42, 38, 0.19);
+  font-size: 0.86rem;
+  line-height: 1.25;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  font-weight: 700;
+}
+
+.index-entry {
+  padding: 14px 0 15px;
+}
+
+.index-entry + .index-entry {
+  border-top: 1px solid rgba(44, 42, 38, 0.08);
+}
+
+.entry-heading {
+  display: grid;
+  grid-template-columns: 2.4rem minmax(0, 1fr) auto;
+  gap: 10px;
+  align-items: baseline;
+}
+
+.entry-number {
+  color: var(--muted);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+  font-size: 0.72rem;
+  font-variant-numeric: tabular-nums;
+}
+
+h3 {
+  margin-bottom: 0;
+  min-width: 0;
+  font-size: 1.03rem;
+  line-height: 1.3;
+  font-weight: 600;
+}
+
+a {
+  color: var(--link);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.16em;
+}
+
+a:hover {
+  text-decoration-thickness: 2px;
+}
+
+a:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+.entry-type {
+  color: var(--muted);
+  font-size: 0.72rem;
+  line-height: 1.3;
+  text-align: right;
+  white-space: nowrap;
+}
+
+.entry-description {
+  margin: 5px 0 1px 3.05rem;
+  font-size: 0.92rem;
+}
+
+.entry-url {
+  margin: 2px 0 0 3.05rem;
+  color: var(--muted);
+  font-size: 0.78rem;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+.seo-health {
+  margin-top: 46px;
+  padding-top: 4px;
+}
+
+.seo-health p {
+  margin-bottom: 9px;
+  font-size: 0.94rem;
+}
+
+.layer-note {
+  color: var(--muted);
+  font-size: 0.75rem !important;
+}
+
+.card-footer {
+  margin-top: 38px;
+  padding-top: 11px;
+  border-top: 1px solid rgba(44, 42, 38, 0.15);
+  color: var(--muted);
+  font-size: 0.72rem;
+  letter-spacing: 0.04em;
+}
+
+.card-footer p {
+  margin-bottom: 0;
+}
+
+@media (max-width: 680px) {
+  body {
+    padding: 16px 10px;
+  }
+
+  .index-card {
+    padding: 46px 22px 28px 38px;
+  }
+
+  .index-card::before {
+    left: 25px;
+  }
+
+  .index-card::after {
+    top: 28px;
+  }
+
+  .directory {
+    margin-top: 34px;
+  }
+
+  .entry-heading {
+    grid-template-columns: 2rem minmax(0, 1fr);
+    gap: 7px;
+  }
+
+  .entry-type {
+    grid-column: 2;
+    justify-self: start;
+    margin-top: 2px;
+    text-align: left;
+    white-space: normal;
+  }
+
+  .entry-description,
+  .entry-url {
+    margin-left: 2.45rem;
+  }
+}
+
+@media (max-width: 390px) {
+  body {
+    padding-inline: 7px;
+  }
+
+  .index-card {
+    padding-right: 16px;
+    padding-left: 31px;
+  }
+
+  .index-card::before {
+    left: 20px;
+  }
+
+  .entry-heading {
+    grid-template-columns: 1.7rem minmax(0, 1fr);
+  }
+
+  .entry-description,
+  .entry-url {
+    margin-left: 2.08rem;
+  }
+}
