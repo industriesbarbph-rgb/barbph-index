@@ -82,8 +82,6 @@ function updateJsonLd(html, rows) {
   if (!itemList) throw new Error("BarbPH Index ItemList JSON-LD node not found.");
   itemList.numberOfItems = rows.length;
   itemList.itemListElement = rows.map((p, i) => ({ "@type": "ListItem", position: i + 1, name: String(p.name || new URL(p.url).hostname), url: String(p.url) }));
-  const collection = graph.find(x => x?.["@type"] === "CollectionPage");
-  if (collection) collection.dateModified = new Date().toISOString();
   const pretty = JSON.stringify(data, null, 2).replace(/</g, "\\u003c");
   return html.replace(re, `<script type="application/ld+json">\n${pretty}\n  </script>`);
 }
