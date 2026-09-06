@@ -2,6 +2,7 @@ import fs from "node:fs/promises";
 
 const REGISTRY_URL = "https://seohealth.barbph.com/.netlify/functions/public-registry";
 const INDEX_PATH = "index.html";
+const INDEX_SELF_URL = "https://barbph-index.netlify.app/";
 const DYNAMIC_START = "<!-- BARBPH INDEX DYNAMIC DIRECTORY START -->";
 const DYNAMIC_END = "<!-- BARBPH INDEX DYNAMIC DIRECTORY END -->";
 
@@ -100,7 +101,7 @@ for (const p of registry) {
 }
 
 const baked = rows.filter(p => bakedUrls.has(p.url));
-const dynamic = rows.filter(p => !bakedUrls.has(p.url));
+const dynamic = rows.filter(p => !bakedUrls.has(p.url) && p.url !== INDEX_SELF_URL);
 if (baked.length < 20) {
   console.log(`Registry returned only ${baked.length}/20 baked products; refusing to rewrite the Index.`);
   process.exit(0);
@@ -110,4 +111,4 @@ let html = await fs.readFile(INDEX_PATH, "utf8");
 html = replaceDynamicBlock(html, dynamicHtml(dynamic, 21));
 html = updateJsonLd(html, [...baked, ...dynamic]);
 await fs.writeFile(INDEX_PATH, html);
-console.log(`BarbPH Index synchronized: ${baked.length} baked + ${dynamic.length} user-added = ${baked.length + dynamic.length} entries.`);
+console.log(`BarbPH Index synchronized: ${baked.length} baked + ${dynamic.length} user-added = ${baked.length + dynamic.length} entries. Index self-registration is intentionally excluded from its own directory.`);
